@@ -4,7 +4,7 @@
 //
 //  Created by Александр Косолапов on 28.02.2025.
 //
-
+// тест
 import UIKit
 
 @main
