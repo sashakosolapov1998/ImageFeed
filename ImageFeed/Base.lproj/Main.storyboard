@@ -31,10 +31,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="4LJ-XA-AUf" userLabel="Cell Image">
-                                                    <rect key="frame" x="0.0" y="0.0" width="393" height="267"/>
+                                                    <rect key="frame" x="16" y="4" width="361" height="259"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="16"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fVF-e5-RNC" userLabel="Like Button">
-                                                    <rect key="frame" x="349" y="0.0" width="44" height="44"/>
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fVF-e5-RNC" userLabel="Like Button">
+                                                    <rect key="frame" x="333" y="4" width="44" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="aL8-gA-w7V"/>
                                                         <constraint firstAttribute="width" constant="44" id="oJl-x9-nmx"/>
@@ -42,7 +49,7 @@
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="13 марта 2025" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2BV-bG-fnp" userLabel="Date Label">
-                                                    <rect key="frame" x="0.0" y="227" width="393" height="40"/>
+                                                    <rect key="frame" x="16" y="223" width="361" height="40"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -50,21 +57,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="leading" secondItem="etV-eT-Okp" secondAttribute="leading" id="KKV-3x-rhh"/>
-                                                <constraint firstAttribute="trailing" secondItem="fVF-e5-RNC" secondAttribute="trailing" id="M96-GA-xUG"/>
-                                                <constraint firstAttribute="bottom" secondItem="4LJ-XA-AUf" secondAttribute="bottom" id="o1e-rk-TmO"/>
-                                                <constraint firstAttribute="trailing" secondItem="4LJ-XA-AUf" secondAttribute="trailing" id="q80-Cx-thR"/>
-                                                <constraint firstItem="2BV-bG-fnp" firstAttribute="leading" secondItem="etV-eT-Okp" secondAttribute="leading" constant="8" id="qKQ-va-Dre"/>
-                                                <constraint firstItem="fVF-e5-RNC" firstAttribute="top" secondItem="etV-eT-Okp" secondAttribute="top" id="uF6-yV-5Be"/>
-                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="top" secondItem="etV-eT-Okp" secondAttribute="top" id="unA-9f-bkk"/>
-                                                <constraint firstAttribute="bottom" secondItem="2BV-bG-fnp" secondAttribute="bottom" constant="8" id="y3I-dw-iRY"/>
+                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="leading" secondItem="etV-eT-Okp" secondAttribute="leading" constant="16" id="KKV-3x-rhh"/>
+                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="fVF-e5-RNC" secondAttribute="trailing" constant="8" id="M96-GA-xUG"/>
+                                                <constraint firstAttribute="bottom" secondItem="4LJ-XA-AUf" secondAttribute="bottom" constant="4" id="o1e-rk-TmO"/>
+                                                <constraint firstAttribute="trailing" secondItem="4LJ-XA-AUf" secondAttribute="trailing" constant="16" id="q80-Cx-thR"/>
+                                                <constraint firstItem="2BV-bG-fnp" firstAttribute="leading" secondItem="4LJ-XA-AUf" secondAttribute="leading" constant="8" id="qKQ-va-Dre"/>
+                                                <constraint firstItem="fVF-e5-RNC" firstAttribute="top" secondItem="4LJ-XA-AUf" secondAttribute="top" id="uF6-yV-5Be"/>
+                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="top" secondItem="etV-eT-Okp" secondAttribute="top" constant="4" id="unA-9f-bkk"/>
+                                                <constraint firstItem="2BV-bG-fnp" firstAttribute="trailing" secondItem="4LJ-XA-AUf" secondAttribute="trailing" id="wiC-Oq-9aT"/>
+                                                <constraint firstItem="4LJ-XA-AUf" firstAttribute="bottom" secondItem="2BV-bG-fnp" secondAttribute="bottom" constant="8" id="y3I-dw-iRY"/>
                                             </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="16"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                            </userDefinedRuntimeAttributes>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>

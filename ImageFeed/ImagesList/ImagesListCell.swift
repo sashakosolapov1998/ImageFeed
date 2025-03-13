@@ -16,7 +16,6 @@ final class ImagesListCell: UITableViewCell {
     override func awakeFromNib() {
             super.awakeFromNib()
 
-            // Вот это обязательно!
             likeButton.setImage(UIImage(named: "like_button_off"), for: .normal)
             likeButton.setImage(UIImage(named: "like_button_on"), for: .selected)
         }
