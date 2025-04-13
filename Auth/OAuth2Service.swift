@@ -34,9 +34,9 @@ final class OAuth2Service {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
         let parameters: [String: String] = [
-            "client_id": "YOUR_CLIENT_ID",
-            "client_secret": "YOUR_CLIENT_SECRET",
-            "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+            "client_id": Constants.accessKey,
+            "client_secret": Constants.secretKey,
+            "redirect_uri": Constants.redirectURI,
             "code": code,
             "grant_type": "authorization_code"
         ]
@@ -50,27 +50,56 @@ final class OAuth2Service {
     }
 
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        print("🌐 fetchOAuthToken вызван с code: \(code)")
         guard let request = makeOAuthTokenRequest(code: code) else {
             completion(.failure(NetworkError.urlSessionError))
             return
         }
 
-        _ = URLSession.shared.data(for: request) { result in
-            switch result {
-            case .success(let data):
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                print("📶 URLSession завершила выполнение запроса")
+
+                if let error = error {
+                    print("❌ Сетевая ошибка: \(error.localizedDescription)")
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("❌ Не удалось получить HTTP-ответ")
+                    completion(.failure(NetworkError.urlSessionError))
+                    return
+                }
+
+                guard (200..<300).contains(httpResponse.statusCode) else {
+                    print("❌ Сервер вернул статус-код: \(httpResponse.statusCode)")
+                    if let data = data {
+                        print("📨 Ответ от сервера (raw): \(String(data: data, encoding: .utf8) ?? "—")")
+                    }
+                    completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
+                    return
+                }
+
+                guard let data = data else {
+                    print("❌ Нет данных в ответе")
+                    completion(.failure(NetworkError.urlSessionError))
+                    return
+                }
+
                 do {
+                    print("📦 Получены данные: \(data.count) байт")
+                    print("📨 Ответ от сервера (raw): \(String(data: data, encoding: .utf8) ?? "—")")
+
                     let decoded = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
                     let token = decoded.accessToken
                     OAuth2TokenStorage().token = token
                     completion(.success(token))
                 } catch {
-                    print("Ошибка декодирования: \(error)")
+                    print("❌ Ошибка декодирования: \(error)")
                     completion(.failure(error))
                 }
-            case .failure(let error):
-                print("Ошибка при получении токена: \(error)")
-                completion(.failure(error))
             }
-        }
+        }.resume()
     }
 }

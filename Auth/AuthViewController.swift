@@ -11,8 +11,12 @@ protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
-    private let ShowWebViewSegueIdentifier = "ShowWebViewSegue"
+    private let ShowWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
+    
+    @IBAction func didTapLoginButton(_ sender: UIButton) {
+        performSegue(withIdentifier: "ShowWebView", sender: self)
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -30,6 +34,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     // MARK: - WebViewViewControllerDelegate
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        print("📥 AuthViewController: получен code: \(code)")
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
             switch result {
             case .success(let token):
@@ -49,9 +54,13 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("🧭 AuthVC: prepare(for:) вызван")
+        print("➡️ segue.identifier = \(segue.identifier ?? "nil")")
+        
         if segue.identifier == ShowWebViewSegueIdentifier,
            let webViewVC = segue.destination as? WebViewViewController {
             webViewVC.delegate = self
+            print("✅ Делегат WebView установлен")
         }
     }
 }

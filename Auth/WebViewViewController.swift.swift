@@ -63,7 +63,7 @@ final class WebViewViewController: UIViewController, WKNavigationDelegate {
         if
             let url = navigationAction.request.url,                         //1
             let urlComponents = URLComponents(string: url.absoluteString),  //2
-            urlComponents.path == "/oauth/authorize/native",                //3
+
             let items = urlComponents.queryItems,                           //4
             let codeItem = items.first(where: { $0.name == "code" })        //5
         {
@@ -103,18 +103,25 @@ final class WebViewViewController: UIViewController, WKNavigationDelegate {
     
 }
 
- // MARK: - WKNavigationDelegate
+// MARK: - WKNavigationDelegate
 extension WebViewViewController {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-        if let code = code(from: navigationAction) {
-            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-            decisionHandler(.cancel)
-        } else {
-            decisionHandler(.allow)
+        if let url = navigationAction.request.url {
+            print("➡️ Загружается URL: \(url)")
+            if let code = code(from: navigationAction) {
+                print("✅ Найден code: \(code)")
+                delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+                print("📤 Делегат вызван с code")
+                decisionHandler(.cancel)
+                return
+            } else {
+                print("❌ Code не найден в URL")
+            }
         }
+        decisionHandler(.allow)
     }
 }
