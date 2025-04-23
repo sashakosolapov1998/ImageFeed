@@ -11,9 +11,11 @@ protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
+    private let showWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
     
+    
+    @IBOutlet weak var loginButton: UIButton!
     @IBAction func didTapLoginButton(_ sender: UIButton) {
         performSegue(withIdentifier: "ShowWebView", sender: self)
     }
@@ -22,8 +24,9 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
+        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
     }
-
+    
     // MARK: - Private Methods
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "chevron.backward")
@@ -31,11 +34,12 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
     }
-
+    
     // MARK: - WebViewViewControllerDelegate
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("📥 AuthViewController: получен code: \(code)")
-        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self, weak vc] result in
+            guard let self = self, let vc = vc else { return }
             switch result {
             case .success(let token):
                 print("Токен успешно получен: \(token)")
@@ -47,17 +51,17 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
             }
         }
     }
-
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
-
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("🧭 AuthVC: prepare(for:) вызван")
         print("➡️ segue.identifier = \(segue.identifier ?? "nil")")
         
-        if segue.identifier == ShowWebViewSegueIdentifier,
+        if segue.identifier == showWebViewSegueIdentifier,
            let webViewVC = segue.destination as? WebViewViewController {
             webViewVC.delegate = self
             print("✅ Делегат WebView установлен")

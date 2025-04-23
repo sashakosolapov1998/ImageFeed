@@ -20,7 +20,6 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
-    
     // MARK: - Outlets and Action
     @IBAction func didTapBackButton(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
@@ -28,9 +27,9 @@ final class SingleImageViewController: UIViewController {
     
     @IBAction func didTapShareButton(_ sender: UIButton) {
         guard let image = image else { return }
-            
-            let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-            present(activityController, animated: true)
+        
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityController, animated: true)
     }
     
     @IBOutlet var imageView: UIImageView!
@@ -76,10 +75,10 @@ final class SingleImageViewController: UIViewController {
     private func centerImageInScrollView() {
         let scrollViewSize = scrollView.bounds.size
         let imageViewSize = imageView.frame.size
-
+        
         let horizontalInset = max(0, (scrollViewSize.width - imageViewSize.width) / 2)
         let verticalInset = max(0, (scrollViewSize.height - imageViewSize.height) / 2)
-
+        
         scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
     }
 }

@@ -13,7 +13,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let token = storage.token {
+        if storage.token != nil {
             // переход на галерею
             switchToTabBarController()
         } else {

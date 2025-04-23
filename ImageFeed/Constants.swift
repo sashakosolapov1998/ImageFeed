@@ -12,5 +12,10 @@ enum Constants {
     static let secretKey = "_Unu58K-mOhrjJ2GPACiL5jZJvdknnoNRf8RpTntFOs"
     static let redirectURI = "https://example.com/callback"
     static let accessScope = "public+read_user+write_likes"
-    static let defaultBaseURL = URL(string: "https://api.unsplash.com")!
+    static let defaultBaseURL: URL = {
+        guard let url = URL(string: "https://api.unsplash.com") else {
+            preconditionFailure("Ошибка: неверный base URL")
+        }
+        return url
+    }()
 }
