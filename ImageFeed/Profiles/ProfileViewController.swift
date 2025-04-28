@@ -5,13 +5,34 @@
 //  Created by Александр Косолапов on 13.03.2025.
 //
 import UIKit
+import Foundation
 
 final class ProfileViewController: UIViewController {
     
+    private let nameLabel = UILabel()
+    private let usernameLabel = UILabel()
+    private let statusLabel = UILabel()
+    private var profile: ProfileService.Profile?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupProfileScreen()
         
+        view.backgroundColor = .primaryBackground
+        
+        guard let token = OAuth2TokenStorage().token else {
+            print("❌ Токен не найден")
+            return
+        }
+
+        ProfileService.shared.fetchProfile(token) { [weak self] result in
+            switch result {
+            case .success(let profile):
+                self?.profile = profile
+                self?.setupProfileScreen()
+            case .failure(let error):
+                print("❌ Ошибка загрузки профиля: \(error)")
+            }
+        }
     }
     
     func setupProfileScreen() {
@@ -22,18 +43,16 @@ final class ProfileViewController: UIViewController {
         avatar.layer.cornerRadius = 35
         avatar.clipsToBounds = true
         
-        let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        guard let profile = profile else { return }
+        nameLabel.text = profile.name
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         
-        let usernameLabel = UILabel()
-        usernameLabel.text = "@ekaterina_novikova"
+        usernameLabel.text = profile.loginName
         usernameLabel.textColor = .gray
         usernameLabel.font = UIFont.systemFont(ofSize: 13)
         
-        let statusLabel = UILabel()
-        statusLabel.text = "Hello, world!"
+        statusLabel.text = profile.bio
         statusLabel.textColor = .white
         statusLabel.font = UIFont.systemFont(ofSize: 13)
         

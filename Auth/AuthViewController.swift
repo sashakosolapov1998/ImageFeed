@@ -6,6 +6,7 @@
 //
 import Foundation
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -38,16 +39,18 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     // MARK: - WebViewViewControllerDelegate
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("📥 AuthViewController: получен code: \(code)")
+        UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self, weak vc] result in
             guard let self = self, let vc = vc else { return }
             switch result {
             case .success(let token):
+                UIBlockingProgressHUD.dismiss()
                 print("Токен успешно получен: \(token)")
                 self.delegate?.didAuthenticate(self)
                 self.dismiss(animated: true)
             case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
                 print("Ошибка при получении токена: \(error)")
-                // Тут можно показать UIAlert пользователю
             }
         }
     }

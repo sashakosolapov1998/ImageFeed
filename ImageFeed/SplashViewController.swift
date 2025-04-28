@@ -9,21 +9,44 @@ import Foundation
 
 final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let storage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if storage.token != nil {
-            // переход на галерею
-            switchToTabBarController()
+        if let token = storage.token {
+            fetchProfile(token)
         } else {
-            // переход на экран авторизации
             performSegue(withIdentifier: "ShowAuthenticationScreen", sender: nil)
         }
     }
     
     func didAuthenticate(_ vc: AuthViewController) {
-        vc.dismiss(animated: true) {[weak self] in self?.switchToTabBarController()}
+        vc.dismiss(animated: true)
+        
+        guard let token = storage.token else {
+            return
+        }
+        
+        fetchProfile(token)
+    }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] result in
+            DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismiss()
+                guard let self = self else { return }
+                
+                switch result {
+                case .success:
+                    self.switchToTabBarController()
+                case .failure(let error):
+                    print("❌ Ошибка загрузки профиля: \(error)")
+                    // Можно позже добавить показ алерта
+                }
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

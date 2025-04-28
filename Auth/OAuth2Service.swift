@@ -11,6 +11,9 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     struct OAuthTokenResponseBody: Decodable {
         let accessToken: String
         
@@ -50,15 +53,34 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        if lastCode == code {
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+        
+        UIBlockingProgressHUD.show()
+        
         print("🌐 fetchOAuthToken вызван с code: \(code)")
         guard let request = makeOAuthTokenRequest(code: code) else {
+            UIBlockingProgressHUD.dismiss()
             completion(.failure(NetworkError.urlSessionError))
             return
         }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 print("📶 URLSession завершила выполнение запроса")
+                
+                defer {
+                    self?.task = nil
+                    self?.lastCode = nil
+                    UIBlockingProgressHUD.dismiss()
+                }
                 
                 if let error = error {
                     print("❌ Сетевая ошибка: \(error.localizedDescription)")
@@ -100,6 +122,8 @@ final class OAuth2Service {
                     completion(.failure(error))
                 }
             }
-        }.resume()
+        }
+        self.task = task
+        task.resume()
     }
 }
