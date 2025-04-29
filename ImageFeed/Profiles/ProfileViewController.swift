@@ -12,30 +12,33 @@ final class ProfileViewController: UIViewController {
     private let nameLabel = UILabel()
     private let usernameLabel = UILabel()
     private let statusLabel = UILabel()
-    private var profile: ProfileService.Profile?
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        
         view.backgroundColor = .primaryBackground
         
-        guard let token = OAuth2TokenStorage().token else {
-            print("❌ Токен не найден")
+        guard let profile = ProfileService.shared.profile else {
+            print("❌ Профиль не найден")
             return
         }
-
-        ProfileService.shared.fetchProfile(token) { [weak self] result in
-            switch result {
-            case .success(let profile):
-                self?.profile = profile
-                self?.setupProfileScreen()
-            case .failure(let error):
-                print("❌ Ошибка загрузки профиля: \(error)")
-            }
-        }
+        
+        updateProfileDetails(profile: profile)
+        updateAvatar()
     }
     
-    func setupProfileScreen() {
+    func updateProfileDetails(profile: ProfileService.Profile) {
         view.backgroundColor = .primaryBackground
         
         let avatar = UIImageView()
@@ -43,7 +46,6 @@ final class ProfileViewController: UIViewController {
         avatar.layer.cornerRadius = 35
         avatar.clipsToBounds = true
         
-        guard let profile = profile else { return }
         nameLabel.text = profile.name
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
@@ -79,15 +81,20 @@ final class ProfileViewController: UIViewController {
             statusLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
             statusLabel.leadingAnchor.constraint(equalTo: avatar.leadingAnchor),
             
-            
             exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             exitButton.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
             exitButton.widthAnchor.constraint(equalToConstant: 44),
             exitButton.heightAnchor.constraint(equalToConstant: 44)
-            
         ])
-        
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
     }
     
 }

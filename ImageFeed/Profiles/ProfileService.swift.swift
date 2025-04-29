@@ -11,7 +11,7 @@ final class ProfileService {
     static let shared = ProfileService()
     private var task: URLSessionTask?
     private var lastToken: String?
-    
+    private(set) var profile: Profile?
     
     private init() {}
     
@@ -74,6 +74,7 @@ final class ProfileService {
                         loginName: "@\(result.username)",
                         bio: result.bio
                     )
+                    self?.profile = profile
                     completion(.success(profile))
                 } catch {
                     print("Ошибка декодирования: \(error)")
