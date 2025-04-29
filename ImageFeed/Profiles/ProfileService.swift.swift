@@ -48,26 +48,15 @@ final class ProfileService {
             return
         }
 
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResults, Error>) in
             DispatchQueue.main.async {
                 defer {
                     self?.task = nil
                     self?.lastToken = nil
                 }
 
-                if let error = error {
-                    print("Ошибка сети: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-
-                guard let data = data else {
-                    completion(.failure(NetworkError.invalidResponse))
-                    return
-                }
-
-                do {
-                    let result = try JSONDecoder().decode(ProfileResults.self, from: data)
+                switch result {
+                case .success(let result):
                     let profile = Profile(
                         username: result.username,
                         name: "\(result.firstName ?? "") \(result.lastName ?? "")".trimmingCharacters(in: .whitespaces),
@@ -76,8 +65,9 @@ final class ProfileService {
                     )
                     self?.profile = profile
                     completion(.success(profile))
-                } catch {
-                    print("Ошибка декодирования: \(error)")
+
+                case .failure(let error):
+                    print("[ProfileService]: Ошибка запроса - \(error.localizedDescription)")
                     completion(.failure(error))
                 }
             }

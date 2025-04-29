@@ -72,53 +72,21 @@ final class OAuth2Service {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             DispatchQueue.main.async {
-                print("📶 URLSession завершила выполнение запроса")
-                
                 defer {
                     self?.task = nil
                     self?.lastCode = nil
                     UIBlockingProgressHUD.dismiss()
                 }
-                
-                if let error = error {
-                    print("❌ Сетевая ошибка: \(error.localizedDescription)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    print("❌ Не удалось получить HTTP-ответ")
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                
-                guard (200..<300).contains(httpResponse.statusCode) else {
-                    print("❌ Сервер вернул статус-код: \(httpResponse.statusCode)")
-                    if let data = data {
-                        print("📨 Ответ от сервера (raw): \(String(data: data, encoding: .utf8) ?? "—")")
-                    }
-                    completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
-                    return
-                }
-                
-                guard let data = data else {
-                    print("❌ Нет данных в ответе")
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                
-                do {
-                    print("📦 Получены данные: \(data.count) байт")
-                    print("📨 Ответ от сервера (raw): \(String(data: data, encoding: .utf8) ?? "—")")
-                    
-                    let decoded = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+
+                switch result {
+                case .success(let decoded):
                     let token = decoded.accessToken
                     OAuth2TokenStorage().token = token
                     completion(.success(token))
-                } catch {
-                    print("❌ Ошибка декодирования: \(error)")
+                case .failure(let error):
+                    print("[OAuth2Service]: Ошибка запроса - \(error.localizedDescription)")
                     completion(.failure(error))
                 }
             }

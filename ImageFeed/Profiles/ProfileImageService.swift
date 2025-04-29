@@ -49,28 +49,23 @@ final class ProfileImageService {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        let task = URLSession.shared.data(for: request) { result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
+            defer { self.isFetching = false }
+
             switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let userResult = try decoder.decode(UserResult.self, from: data)
-                    let smallAvatarURL = userResult.profileImage.small
-                    self.avatarURL = smallAvatarURL
-                    self.isFetching = false
-                    completion(.success(smallAvatarURL))
-                    
-                    NotificationCenter.default.post(
-                               name: ProfileImageService.didChangeNotification,
-                               object: self,
-                               userInfo: ["URL": smallAvatarURL]
-                           )
-                } catch {
-                    self.isFetching = false
-                    completion(.failure(error))
-                }
+            case .success(let userResult):
+                let smallAvatarURL = userResult.profileImage.small
+                self.avatarURL = smallAvatarURL
+                completion(.success(smallAvatarURL))
+
+                NotificationCenter.default.post(
+                    name: ProfileImageService.didChangeNotification,
+                    object: self,
+                    userInfo: ["URL": smallAvatarURL]
+                )
             case .failure(let error):
-                self.isFetching = false
+                print("[ProfileImageService]: Ошибка запроса - \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
