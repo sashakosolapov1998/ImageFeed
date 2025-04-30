@@ -6,9 +6,11 @@
 //
 import UIKit
 import Foundation
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private let avatar = UIImageView()
     private let nameLabel = UILabel()
     private let usernameLabel = UILabel()
     private let statusLabel = UILabel()
@@ -40,8 +42,8 @@ final class ProfileViewController: UIViewController {
     
     func updateProfileDetails(profile: ProfileService.Profile) {
         view.backgroundColor = .primaryBackground
+      
         
-        let avatar = UIImageView()
         avatar.image = UIImage(named: "AvatarSample")
         avatar.layer.cornerRadius = 35
         avatar.clipsToBounds = true
@@ -94,7 +96,7 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        avatar.kf.setImage(with: url)
     }
     
 }
