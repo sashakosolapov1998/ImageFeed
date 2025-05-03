@@ -32,9 +32,11 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
+                    print("[dataTask]: NetworkError - Status code \(statusCode)")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
+                print("[dataTask]: NetworkError - \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError)) 
@@ -58,6 +60,8 @@ extension URLSession {
                         completion(.success(decodedObject))
                     }
                 } catch {
+                    print("[objectTask]: DecodingError - \(error.localizedDescription)")
+                    print("[objectTask]: Response data - \(String(data: data, encoding: .utf8) ?? "nil")")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
