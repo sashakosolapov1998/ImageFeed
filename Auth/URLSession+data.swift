@@ -28,18 +28,20 @@ extension URLSession {
         }
         
         let task = dataTask(with: request, completionHandler: { data, response, error in
-            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                if 200 ..< 300 ~= statusCode {
+            if let response = response as? HTTPURLResponse {
+                let statusCode = response.statusCode
+                if 200 ..< 300 ~= statusCode, let data = data {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
-                    print("[dataTask]: NetworkError - Status code \(statusCode)")
+                    print("[data(for:)]: HTTP error - status code \(statusCode)")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
-                print("[dataTask]: NetworkError - \(error.localizedDescription)")
+                print("[data(for:)]: URL request error - \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
-                fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError)) 
+                print("[data(for:)]: Unknown session error")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })
         
@@ -67,6 +69,7 @@ extension URLSession {
                     }
                 }
             case .failure(let error):
+                print("[objectTask]: Failure - \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
