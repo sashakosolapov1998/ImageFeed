@@ -4,7 +4,7 @@
 //
 //  Created by Александр Косолапов on 29.04.2025.
 //
- 
+
 import Foundation
 
 final class ProfileImageService {
