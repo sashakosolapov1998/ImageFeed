@@ -7,35 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D07D1802DA6B2F4004C2879 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D07D17F2DA6B2F0004C2879 /* AuthViewController.swift */; };
-		4D07D1832DA6C2C2004C2879 /* WebViewViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D07D1822DA6C2C0004C2879 /* WebViewViewController.swift.swift */; };
-		4D14E1352DC634D0008699AD /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D14E1342DC634CC008699AD /* TabBarController.swift */; };
 		4D14E1392DC63646008699AD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D7BDB7A2DA6E47B004F4CEA /* WebKit.framework */; };
 		4D1AFA0F2DC4B93A0097105B /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 4D1AFA0E2DC4B93A0097105B /* SwiftKeychainWrapper */; };
-		4D7588492DA85DB000C35273 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7588482DA85DAB00C35273 /* OAuth2Service.swift */; };
-		4D7BDB7D2DA6EF39004F4CEA /* WebViewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7BDB7C2DA6EF37004F4CEA /* WebViewViewControllerDelegate.swift */; };
 		4D89EA6E2DC2220D007A9CE3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4D89EA6D2DC2220D007A9CE3 /* Kingfisher */; };
 		4D8E81992DBAAF4000D6DEA9 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8E81982DBAAF4000D6DEA9 /* ProgressHUD */; };
-		4D96D2322DBF41FB00A9A2CD /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D96D2312DBF41F700A9A2CD /* UIBlockingProgressHUD.swift */; };
-		4DF595D62DAC2321001A9CFA /* URLSession+data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF595D52DAC231D001A9CFA /* URLSession+data.swift */; };
-		4DF595D82DAC245A001A9CFA /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF595D72DAC2445001A9CFA /* OAuth2TokenStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4D07D17F2DA6B2F0004C2879 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		4D07D1822DA6C2C0004C2879 /* WebViewViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift.swift; sourceTree = "<group>"; };
 		4D09222F2D7123CE009D9400 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D14E1342DC634CC008699AD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		4D7588482DA85DAB00C35273 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		4D7BDB7A2DA6E47B004F4CEA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		4D7BDB7C2DA6EF37004F4CEA /* WebViewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerDelegate.swift; sourceTree = "<group>"; };
-		4D96D2312DBF41F700A9A2CD /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
-		4DF595D52DAC231D001A9CFA /* URLSession+data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+data.swift"; sourceTree = "<group>"; };
-		4DF595D72DAC2445001A9CFA /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4D0922412D7123D0009D9400 /* Exceptions for "ImageFeed" folder in "ImageFeed" target */ = {
+		4D33C3C72DC8EC000065BD27 /* Exceptions for "Resources" folder in "ImageFeed" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -47,10 +31,30 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4D0922312D7123CE009D9400 /* ImageFeed */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4D0922412D7123D0009D9400 /* Exceptions for "ImageFeed" folder in "ImageFeed" target */,
-			);
 			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		4D33C3B52DC8D0DD0065BD27 /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = App;
+			sourceTree = "<group>";
+		};
+		4D33C3B82DC8D1220065BD27 /* Auth */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		4D33C3BF2DC8D1E20065BD27 /* Helpers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		4D33C3C02DC8D20D0065BD27 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4D33C3C72DC8EC000065BD27 /* Exceptions for "Resources" folder in "ImageFeed" target */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -70,25 +74,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4D07D1812DA6C213004C2879 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				4DF595D72DAC2445001A9CFA /* OAuth2TokenStorage.swift */,
-				4DF595D52DAC231D001A9CFA /* URLSession+data.swift */,
-				4D07D1822DA6C2C0004C2879 /* WebViewViewController.swift.swift */,
-				4D7588482DA85DAB00C35273 /* OAuth2Service.swift */,
-				4D96D2312DBF41F700A9A2CD /* UIBlockingProgressHUD.swift */,
-				4D7BDB7C2DA6EF37004F4CEA /* WebViewViewControllerDelegate.swift */,
-				4D07D17F2DA6B2F0004C2879 /* AuthViewController.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
 		4D0922262D7123CE009D9400 = {
 			isa = PBXGroup;
 			children = (
-				4D14E1342DC634CC008699AD /* TabBarController.swift */,
-				4D07D1812DA6C213004C2879 /* Auth */,
+				4D33C3B82DC8D1220065BD27 /* Auth */,
+				4D33C3C02DC8D20D0065BD27 /* Resources */,
+				4D33C3BF2DC8D1E20065BD27 /* Helpers */,
+				4D33C3B52DC8D0DD0065BD27 /* App */,
 				4D0922312D7123CE009D9400 /* ImageFeed */,
 				4D7BDB792DA6E47B004F4CEA /* Frameworks */,
 				4D0922302D7123CE009D9400 /* Products */,
@@ -128,6 +120,10 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4D0922312D7123CE009D9400 /* ImageFeed */,
+				4D33C3B52DC8D0DD0065BD27 /* App */,
+				4D33C3B82DC8D1220065BD27 /* Auth */,
+				4D33C3BF2DC8D1E20065BD27 /* Helpers */,
+				4D33C3C02DC8D20D0065BD27 /* Resources */,
 			);
 			name = ImageFeed;
 			packageProductDependencies = (
@@ -193,14 +189,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D96D2322DBF41FB00A9A2CD /* UIBlockingProgressHUD.swift in Sources */,
-				4D7BDB7D2DA6EF39004F4CEA /* WebViewViewControllerDelegate.swift in Sources */,
-				4D7588492DA85DB000C35273 /* OAuth2Service.swift in Sources */,
-				4D14E1352DC634D0008699AD /* TabBarController.swift in Sources */,
-				4DF595D62DAC2321001A9CFA /* URLSession+data.swift in Sources */,
-				4D07D1832DA6C2C2004C2879 /* WebViewViewController.swift.swift in Sources */,
-				4DF595D82DAC245A001A9CFA /* OAuth2TokenStorage.swift in Sources */,
-				4D07D1802DA6B2F4004C2879 /* AuthViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +204,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BSZ8XQLR3B;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -244,7 +232,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BSZ8XQLR3B;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
