@@ -40,14 +40,16 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 3.0
         scrollView.delegate = self
 
         if let imageURL = imageURL {
             imageView.kf.indicatorType = .activity
             imageView.kf.setImage(with: imageURL) { [weak self] result in
                 if case let .success(value) = result {
+                    self?.imageView.image = value.image
+                    self?.imageView.frame.size = value.image.size
                     self?.rescaleAndCenterImageInScrollView(image: value.image)
                 }
             }
@@ -62,26 +64,22 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
-        let minZoomScale = scrollView.minimumZoomScale
-        let maxZoomScale = scrollView.maximumZoomScale
         view.layoutIfNeeded()
-        
-        let visibleRectSize = scrollView.bounds.size
+
+        let scrollViewSize = scrollView.bounds.size
         let imageSize = image.size
-        
-        let hScale = visibleRectSize.width / imageSize.width
-        let vScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
-        
-        scrollView.setZoomScale(scale, animated: false)
-        scrollView.layoutIfNeeded()
-        
+
+        let widthRatio = scrollViewSize.width / imageSize.width
+        let heightRatio = scrollViewSize.height / imageSize.height
+        let scale = min(widthRatio, heightRatio)
+
+        let scaledSize = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
+        imageView.frame = CGRect(origin: .zero, size: scaledSize)
+
+        scrollView.contentSize = scaledSize
+        scrollView.zoomScale = 1.0
+
         centerImageInScrollView()
-        
-        let newContentSize = scrollView.contentSize
-        let x = (newContentSize.width - visibleRectSize.width) / 2
-        let y = (newContentSize.height - visibleRectSize.height) / 2
-        scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
     
     // MARK: - Метод для центрирования изображения через contentInset (добавлено по дополнительному заданию)

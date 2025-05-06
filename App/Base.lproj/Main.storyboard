@@ -14,7 +14,7 @@
         <scene sceneID="dGB-4v-Z3i">
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="kra-au-LuN" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Rdu-4p-cRO">
+                    <view key="view" contentMode="scaleAspectFit" id="Rdu-4p-cRO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
