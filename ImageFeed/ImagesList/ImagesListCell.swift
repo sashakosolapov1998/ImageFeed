@@ -7,6 +7,9 @@
 import UIKit
 import Kingfisher
 // MARK: - ImageListCell
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     
@@ -14,6 +17,8 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var cellImage: UIImageView!
+    
+    weak var delegate: ImagesListCellDelegate?
     
     // MARK: - Methods
     override func awakeFromNib() {
@@ -29,5 +34,12 @@ final class ImagesListCell: UITableViewCell {
         cellImage.image = nil
         dateLabel.text = ""
     }
+    
+    func setIsLiked(_ isLiked: Bool) {
+        likeButton.isSelected = isLiked
+    }
+    
+    @IBAction private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
+    }
 }
-

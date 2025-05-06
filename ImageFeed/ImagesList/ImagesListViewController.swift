@@ -90,6 +90,7 @@ extension ImagesListViewController: UITableViewDataSource {
         }
 
         configCell(for: imageListCell, with: indexPath)
+        imageListCell.delegate = self
         return imageListCell
     }
 }
@@ -133,6 +134,36 @@ extension ImagesListViewController {
             viewController.imageURL = URL(string: photo.largeImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
+        }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+
+        UIBlockingProgressHUD.show()
+
+        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self else { return }
+            UIBlockingProgressHUD.dismiss()
+
+            switch result {
+            case .success:
+                self.photos = self.imageListService.photos
+                cell.setIsLiked(self.photos[indexPath.row].isLiked)
+            case .failure:
+                let alert = UIAlertController(
+                    title: "Ошибка",
+                    message: "Не удалось поставить лайк. Попробуйте ещё раз.",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "ОК", style: .default))
+                self.present(alert, animated: true)
+            }
         }
     }
 }
