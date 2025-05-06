@@ -19,6 +19,7 @@ final class SingleImageViewController: UIViewController {
             }
         }
     }
+    var imageURL: URL?
     
     // MARK: - Outlets and Action
     @IBAction func didTapBackButton(_ sender: UIButton) {
@@ -42,6 +43,16 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         scrollView.delegate = self
+
+        if let imageURL = imageURL {
+            imageView.kf.indicatorType = .activity
+            imageView.kf.setImage(with: imageURL) { [weak self] result in
+                if case let .success(value) = result {
+                    self?.rescaleAndCenterImageInScrollView(image: value.image)
+                }
+            }
+            return
+        }
         
         if let image = image {
             imageView.image = image
@@ -64,6 +75,8 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
+        
+        centerImageInScrollView()
         
         let newContentSize = scrollView.contentSize
         let x = (newContentSize.width - visibleRectSize.width) / 2

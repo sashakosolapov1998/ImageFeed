@@ -8,6 +8,9 @@
 import Foundation
 
 final class ImagesListService {
+    static let shared = ImagesListService()
+    private init() {}
+    
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private var task: URLSessionTask?
     private(set) var photos: [Photo] = []

@@ -16,9 +16,9 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
-    private let photosName: [String] = Array(0..<20).map { "\($0)" }
+    private var photos: [ImagesListService.Photo] = []
     
-    private let imageListService = ImagesListService()
+    private let imageListService = ImagesListService.shared
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -31,35 +31,54 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        
+        NotificationCenter.default.addObserver(forName: ImagesListService.didChangeNotification, object: nil, queue: .main)
+        { [weak self] _ in self?.updateTableViewAnimated()
+            
+        }
+        imageListService.fetchPhotosNextPage()
        
     }
     
     // MARK: - Private Methods
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let imageName = photosName[indexPath.row]
-        
-        // Проверяем, можно ли создать UIImage
-        guard let image = UIImage(named: imageName) else {
-            return
+        let photo = photos[indexPath.row]
+
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(
+            with: URL(string: photo.largeImageURL),
+            placeholder: UIImage(named: "Stub")
+        )
+
+        if let date = photo.createdAt {
+            cell.dateLabel.text = dateFormatter.string(from: date)
+        } else {
+            cell.dateLabel.text = ""
         }
-        
-        cell.cellImage.image = image
-        
-        // Устанавливаем текущую дату
-        let currentDate = Date()
-        cell.dateLabel.text = dateFormatter.string(from: currentDate)
-        
-        // Устанавливаем состояние кнопки лайка
-        cell.likeButton.isSelected = indexPath.row % 2 == 0
+
+        cell.likeButton.isSelected = photo.isLiked
+    }
+    
+    private func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imageListService.photos.count
+
+        photos = imageListService.photos
+
+        if oldCount != newCount {
+            tableView.performBatchUpdates({
+                let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            }, completion: nil)
+        }
     }
 }
 
 // MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -83,29 +102,19 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView:UITableView, willDisplay cell:UITableViewCell, forRowAt indexPath: IndexPath){
-        // допишем
+        if indexPath.row + 1 == photos.count {
+            imageListService.fetchPhotosNextPage()
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let photo = photos[indexPath.row]
 
-            // Получаем имя изображения
-            let imageName = photosName[indexPath.row]
-            
-            // Получаем изображение из ресурсов
-            guard let image = UIImage(named: imageName) else {
-                // Возвращаем стандартную высоту, если изображения нет
-                return 200
-            }
-            
-            // Вычисляем ширину изображения
-            let imageWidth = tableView.bounds.width - 32 // отступы по 16 слева и справа
-            
-            // Вычисляем высоту, сохраняя соотношение сторон
-            let imageHeight = image.size.height / image.size.width * imageWidth
-            
-            // Возвращаем высоту с учетом отступов сверху и снизу
-            return imageHeight + 16 + 8 // 16 сверху, 8 снизу
-        }
+        let imageWidth = tableView.bounds.width - 32
+        let imageHeight = photo.size.height / photo.size.width * imageWidth
+
+        return imageHeight + 16 + 8
+    }
 }
 // MARK: - Navigation
 
@@ -120,8 +129,8 @@ extension ImagesListViewController {
                 return
             }
 
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
+            let photo = photos[indexPath.row]
+            viewController.imageURL = URL(string: photo.largeImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
         }
