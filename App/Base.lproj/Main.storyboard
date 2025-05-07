@@ -204,7 +204,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEl-LX-pUd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-984" y="16"/>
+            <point key="canvasLocation" x="-984" y="-40"/>
         </scene>
         <!--Images List View Controller-->
         <scene sceneID="tne-QT-ifu">

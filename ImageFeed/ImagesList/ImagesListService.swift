@@ -159,4 +159,9 @@ final class ImagesListService {
         }
         task.resume()
     }
+    
+    func clean(){
+        photos = []
+        lastLoadedPage = 0
+    }
 }
