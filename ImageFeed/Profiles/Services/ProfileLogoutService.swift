@@ -21,9 +21,10 @@ final class ProfileLogoutService {
            ImagesListService.shared.clean()
            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let delegate = windowScene.delegate as? SceneDelegate {
-               let storyboard = UIStoryboard(name: "Main", bundle: .main)
-               let authVC = storyboard.instantiateViewController(withIdentifier: "AuthViewController")
-               delegate.window?.rootViewController = authVC
+               delegate.window?.rootViewController?.dismiss(animated: false) {
+                   let splashVC = SplashViewController()
+                   delegate.window?.rootViewController = splashVC
+               }
            }
        }
 
