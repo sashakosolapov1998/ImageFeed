@@ -43,46 +43,66 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 3.0
         scrollView.delegate = self
-
-        if let imageURL = imageURL {
-            imageView.kf.indicatorType = .activity
-            imageView.kf.setImage(with: imageURL) { [weak self] result in
-                if case let .success(value) = result {
-                    self?.imageView.image = value.image
-                    self?.imageView.frame.size = value.image.size
-                    self?.rescaleAndCenterImageInScrollView(image: value.image)
-                }
-            }
-            return
-        }
         
-        if let image = image {
-            imageView.image = image
-            imageView.frame.size = image.size
-            rescaleAndCenterImageInScrollView(image: image)
+        if let _ = imageURL {
+            loadImage()
         }
+    }
+    
+    // MARK: - Func
+    func loadImage() {
+        guard let imageURL = imageURL else { return }
+        
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            switch result {
+            case.success(let value):
+                self.imageView.image = value.image
+                self.imageView.frame.size = value.image.size
+                self.rescaleAndCenterImageInScrollView(image: value.image)
+            case.failure:
+                self.showError()
+            }
+        }
+    }
+    
+    private func showError() {
+        let alert = UIAlertController(
+            title: "Ошибка",
+            message: "Что-то пошло не так. Попробовать еще раз?",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Не надо", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.loadImage()
+        })
+        
+        present(alert, animated: true)
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         view.layoutIfNeeded()
-
+        
         let scrollViewSize = scrollView.bounds.size
         let imageSize = image.size
-
+        
         let widthRatio = scrollViewSize.width / imageSize.width
         let heightRatio = scrollViewSize.height / imageSize.height
         let scale = min(widthRatio, heightRatio)
-
+        
         let scaledSize = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
         imageView.frame = CGRect(origin: .zero, size: scaledSize)
-
+        
         scrollView.contentSize = scaledSize
         scrollView.zoomScale = 1.0
-
+        
         centerImageInScrollView()
     }
     
-    // MARK: - Метод для центрирования изображения через contentInset (добавлено по дополнительному заданию)
     private func centerImageInScrollView() {
         let scrollViewSize = scrollView.bounds.size
         let imageViewSize = imageView.frame.size
@@ -92,15 +112,18 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
     }
+    
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        centerImageInScrollView()
+    }
 }
 
+
+// MARK: - Extension
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
-    // MARK: - Центрирование изображения после зума (добавлено по дополнительному заданию)
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        centerImageInScrollView()
-    }
 }
+

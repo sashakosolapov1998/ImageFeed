@@ -26,13 +26,17 @@ final class ImagesListService {
         let createdAt: Date?
         let welcomeDescription: String?
         let thumbImageURL: String
-        let largeImageURL: String
+        let smallImageURL: String
+        let regularImageURL: String
+        let fullImageURL: String
         let isLiked: Bool
     }
     
     struct UrlsResult: Decodable {
         let thumb: String
         let full: String
+        let small: String
+        let regular: String
     }
     
     struct PhotoResult: Decodable {
@@ -83,7 +87,9 @@ final class ImagesListService {
                             createdAt: ISO8601DateFormatter().date(from: result.createdAt),
                             welcomeDescription: result.description,
                             thumbImageURL: result.urls.thumb,
-                            largeImageURL: result.urls.full,
+                            smallImageURL: result.urls.small,
+                            regularImageURL: result.urls.regular,
+                            fullImageURL: result.urls.full,
                             isLiked: result.likedByUser
                         )
                     }
@@ -139,7 +145,10 @@ final class ImagesListService {
                         createdAt: photo.createdAt,
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
-                        largeImageURL: photo.largeImageURL,
+                        smallImageURL: photo.smallImageURL,
+                        regularImageURL: photo.regularImageURL,
+                        fullImageURL: photo.fullImageURL,
+                        
                         isLiked: !photo.isLiked
                     )
                     self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)

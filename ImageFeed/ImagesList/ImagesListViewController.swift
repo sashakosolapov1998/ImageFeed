@@ -47,7 +47,7 @@ final class ImagesListViewController: UIViewController {
 
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
-            with: URL(string: photo.largeImageURL),
+            with: URL(string: photo.regularImageURL),
             placeholder: UIImage(named: "Stub")
         )
 
@@ -131,7 +131,7 @@ extension ImagesListViewController {
             }
 
             let photo = photos[indexPath.row]
-            viewController.imageURL = URL(string: photo.largeImageURL)
+            viewController.imageURL = URL(string: photo.fullImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
         }
