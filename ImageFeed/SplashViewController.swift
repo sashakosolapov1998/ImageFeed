@@ -12,7 +12,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     private let profileService = ProfileService.shared
     
     let logoImageView = UIImageView()
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
