@@ -43,7 +43,8 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 3.0
         scrollView.delegate = self
-        
+        imageView.contentMode = .scaleAspectFill
+
         if let _ = imageURL {
             loadImage()
         }
@@ -87,12 +88,12 @@ final class SingleImageViewController: UIViewController {
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         view.layoutIfNeeded()
         
-        let scrollViewSize = scrollView.bounds.size
+        let scrollViewSize = scrollView.frame.size
         let imageSize = image.size
         
         let widthRatio = scrollViewSize.width / imageSize.width
         let heightRatio = scrollViewSize.height / imageSize.height
-        let scale = min(widthRatio, heightRatio)
+        let scale = max(widthRatio, heightRatio)
         
         let scaledSize = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
         imageView.frame = CGRect(origin: .zero, size: scaledSize)
@@ -104,11 +105,11 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func centerImageInScrollView() {
-        let scrollViewSize = scrollView.bounds.size
+        let scrollViewSize = scrollView.frame.size
         let imageViewSize = imageView.frame.size
         
-        let horizontalInset = max(0, (scrollViewSize.width - imageViewSize.width) / 2)
-        let verticalInset = max(0, (scrollViewSize.height - imageViewSize.height) / 2)
+        let horizontalInset = (scrollViewSize.width - imageViewSize.width) / 2
+        let verticalInset = (scrollViewSize.height - imageViewSize.height) / 2
         
         scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
     }
@@ -125,5 +126,8 @@ extension SingleImageViewController: UIScrollViewDelegate {
         return imageView
     }
     
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        centerImageInScrollView()
+    }
+    
 }
-
