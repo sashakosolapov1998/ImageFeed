@@ -5,35 +5,58 @@
 //  Created by Александр Косолапов on 13.03.2025.
 //
 import UIKit
+import Foundation
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private let avatar = UIImageView()
+    private let nameLabel = UILabel()
+    private let usernameLabel = UILabel()
+    private let statusLabel = UILabel()
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupProfileScreen()
         
-    }
-    
-    func setupProfileScreen() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        
         view.backgroundColor = .primaryBackground
         
-        let avatar = UIImageView()
+        guard let profile = ProfileService.shared.profile else {
+            print("❌ Профиль не найден")
+            return
+        }
+        
+        updateProfileDetails(profile: profile)
+        updateAvatar()
+    }
+    
+    func updateProfileDetails(profile: ProfileService.Profile) {
+        view.backgroundColor = .primaryBackground
+      
+        
         avatar.image = UIImage(named: "AvatarSample")
         avatar.layer.cornerRadius = 35
         avatar.clipsToBounds = true
         
-        let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        nameLabel.text = profile.name
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         
-        let usernameLabel = UILabel()
-        usernameLabel.text = "@ekaterina_novikova"
+        usernameLabel.text = profile.loginName
         usernameLabel.textColor = .gray
         usernameLabel.font = UIFont.systemFont(ofSize: 13)
         
-        let statusLabel = UILabel()
-        statusLabel.text = "Hello, world!"
+        statusLabel.text = profile.bio
         statusLabel.textColor = .white
         statusLabel.font = UIFont.systemFont(ofSize: 13)
         
@@ -60,15 +83,20 @@ final class ProfileViewController: UIViewController {
             statusLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
             statusLabel.leadingAnchor.constraint(equalTo: avatar.leadingAnchor),
             
-            
             exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             exitButton.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
             exitButton.widthAnchor.constraint(equalToConstant: 44),
             exitButton.heightAnchor.constraint(equalToConstant: 44)
-            
         ])
-        
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        avatar.kf.setImage(with: url)
     }
     
 }

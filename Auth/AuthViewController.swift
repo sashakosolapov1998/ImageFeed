@@ -6,6 +6,7 @@
 //
 import Foundation
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -25,6 +26,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         super.viewDidLoad()
         configureBackButton()
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        
     }
     
     // MARK: - Private Methods
@@ -38,16 +40,25 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     // MARK: - WebViewViewControllerDelegate
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("📥 AuthViewController: получен code: \(code)")
+        UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self, weak vc] result in
             guard let self = self, let vc = vc else { return }
             switch result {
             case .success(let token):
+                UIBlockingProgressHUD.dismiss()
                 print("Токен успешно получен: \(token)")
                 self.delegate?.didAuthenticate(self)
                 self.dismiss(animated: true)
             case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
                 print("Ошибка при получении токена: \(error)")
-                // Тут можно показать UIAlert пользователю
+                let alert = UIAlertController(
+                    title: "Что-то пошло не так(",
+                    message: "Не удалось войти в систему",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "ОК", style: .default))
+                self.present(alert, animated: true)
             }
         }
     }
