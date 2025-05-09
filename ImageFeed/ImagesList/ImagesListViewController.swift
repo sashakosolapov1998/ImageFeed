@@ -7,11 +7,17 @@
 
 import UIKit
 
+// MARK: - ImagesListViewController
 final class ImagesListViewController: UIViewController {
     
+    // MARK: - Outlets
     @IBOutlet private var tableView: UITableView!
+   
+    // MARK: - Properties
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     private let photosName: [String] = Array(0..<20).map { "\($0)" }
+    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -19,11 +25,13 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
+    // MARK: - Private Methods
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageName = photosName[indexPath.row]
         
@@ -37,7 +45,6 @@ final class ImagesListViewController: UIViewController {
         cell.dateLabel.text = dateFormatter.string(from: currentDate)
         cell.likeButton.isSelected = indexPath.row % 2 == 0
     }
-    
 }
 
 // MARK: - UITableViewDataSource
@@ -62,7 +69,9 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: - Добавить логику при нажатии на ячейку
+
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -72,10 +81,26 @@ extension ImagesListViewController: UITableViewDelegate {
             // Возвращаем стандартную высоту, если изображения нет
             return 200
         }
-   
-        let imageWidth = tableView.bounds.width - 32 // отступы по 16 слева и справа
-        let imageHeight = image.size.height / image.size.width * imageWidth
-        
-        return imageHeight + 16 + 8 // 16 сверху, 8 снизу
+
+}
+// MARK: - Navigation
+
+extension ImagesListViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            guard
+                let viewController = segue.destination as? SingleImageViewController,
+                let indexPath = sender as? IndexPath
+            else {
+                assertionFailure("Invalid segue destination")
+                return
+            }
+
+            let image = UIImage(named: photosName[indexPath.row])
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+
     }
 }
