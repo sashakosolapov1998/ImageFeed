@@ -38,7 +38,6 @@ final class ImagesListViewController: UIViewController {
             
         }
         imageListService.fetchPhotosNextPage()
-       
     }
     
     // MARK: - Private Methods
@@ -80,15 +79,14 @@ extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photos.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
-
+        
         guard let imageListCell = cell as? ImagesListCell else {
-            print("Ошибка: Ячейка не является типом ImagesListCell")
             return UITableViewCell()
         }
-
+        
         configCell(for: imageListCell, with: indexPath)
         imageListCell.delegate = self
         return imageListCell
@@ -99,7 +97,9 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+
     }
     
     func tableView(_ tableView:UITableView, willDisplay cell:UITableViewCell, forRowAt indexPath: IndexPath){
@@ -135,6 +135,7 @@ extension ImagesListViewController {
         } else {
             super.prepare(for: segue, sender: sender)
         }
+
     }
 }
 

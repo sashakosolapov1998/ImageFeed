@@ -11,13 +11,17 @@ protocol ImagesListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 final class ImagesListCell: UITableViewCell {
+    
+    // MARK: - Static properties
     static let reuseIdentifier = "ImagesListCell"
     
+
     // MARK: - Outlets
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var cellImage: UIImageView!
     
+
     weak var delegate: ImagesListCellDelegate?
     
     // MARK: - Methods
