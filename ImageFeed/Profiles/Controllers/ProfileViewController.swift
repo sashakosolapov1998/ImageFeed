@@ -7,15 +7,17 @@
 import UIKit
 import Foundation
 import Kingfisher
-
+// MARK: - ProfileViewController
 final class ProfileViewController: UIViewController {
     
+    // MARK: - Properties
     private let avatar = UIImageView()
     private let nameLabel = UILabel()
     private let usernameLabel = UILabel()
     private let statusLabel = UILabel()
     private var profileImageServiceObserver: NSObjectProtocol?
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,9 +42,10 @@ final class ProfileViewController: UIViewController {
         updateAvatar()
     }
     
+    // MARK: - Public Methods
     func updateProfileDetails(profile: ProfileService.Profile) {
         view.backgroundColor = .primaryBackground
-      
+        
         
         avatar.image = UIImage(named: "AvatarSample")
         avatar.layer.cornerRadius = 35
@@ -92,6 +95,7 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private Methods
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
@@ -108,15 +112,15 @@ final class ProfileViewController: UIViewController {
         )
         
         alert.addAction(UIAlertAction(title: "Да", style: .default) { _ in
-                   ProfileLogoutService.shared.logout()
-               })
+            ProfileLogoutService.shared.logout()
+        })
         
         alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
         
-       
+        
         
         present(alert, animated: true, completion: nil)
     }
 }
 
-  
+

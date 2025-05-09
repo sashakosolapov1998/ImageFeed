@@ -6,31 +6,33 @@
 //
 import UIKit
 import Kingfisher
-// MARK: - ImageListCell
+
 protocol ImagesListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
+
+// MARK: - ImageListCell
 final class ImagesListCell: UITableViewCell {
     
     // MARK: - Static properties
     static let reuseIdentifier = "ImagesListCell"
     
-
+    
     // MARK: - Outlets
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var cellImage: UIImageView!
     
-
+    
     weak var delegate: ImagesListCellDelegate?
     
     // MARK: - Methods
     override func awakeFromNib() {
-            super.awakeFromNib()
-
-            likeButton.setImage(UIImage(named: "like_button_off"), for: .normal)
-            likeButton.setImage(UIImage(named: "like_button_on"), for: .selected)
-        }
+        super.awakeFromNib()
+        
+        likeButton.setImage(UIImage(named: "like_button_off"), for: .normal)
+        likeButton.setImage(UIImage(named: "like_button_on"), for: .selected)
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()

@@ -39,18 +39,20 @@ final class SingleImageViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         
-        scrollView.minimumZoomScale = 1.0
+        scrollView.minimumZoomScale = 0.5
         scrollView.maximumZoomScale = 3.0
         scrollView.delegate = self
         imageView.contentMode = .scaleAspectFill
-
+        
         if let _ = imageURL {
             loadImage()
         }
     }
     
-    // MARK: - Func
+    // MARK: - Public Methods
     func loadImage() {
         guard let imageURL = imageURL else { return }
         
@@ -61,6 +63,7 @@ final class SingleImageViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case.success(let value):
+                self.image = value.image
                 self.imageView.image = value.image
                 self.imageView.frame.size = value.image.size
                 self.rescaleAndCenterImageInScrollView(image: value.image)
@@ -70,6 +73,7 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    // MARK: - Private Methods
     private func showError() {
         let alert = UIAlertController(
             title: "Ошибка",
@@ -108,10 +112,14 @@ final class SingleImageViewController: UIViewController {
         let scrollViewSize = scrollView.frame.size
         let imageViewSize = imageView.frame.size
         
-        let horizontalInset = (scrollViewSize.width - imageViewSize.width) / 2
-        let verticalInset = (scrollViewSize.height - imageViewSize.height) / 2
+        let horizontalInset = max(0, (scrollViewSize.width - imageViewSize.width) / 2)
+        let verticalInset = max(0, (scrollViewSize.height - imageViewSize.height) / 2)
         
         scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+        
+        let offsetX = max((scrollView.contentSize.width - scrollView.bounds.width) / 2, 0)
+        let offsetY = max((scrollView.contentSize.height - scrollView.bounds.height) / 2, 0)
+        scrollView.contentOffset = CGPoint(x: offsetX, y: offsetY)
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {

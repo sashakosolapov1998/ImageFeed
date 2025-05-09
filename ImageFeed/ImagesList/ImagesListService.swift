@@ -16,7 +16,6 @@ final class ImagesListService {
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private var task: URLSessionTask?
     private(set) var photos: [Photo] = []
-    
     private var lastLoadedPage: Int?
     let token = OAuth2TokenStorage().token
     
@@ -117,18 +116,18 @@ final class ImagesListService {
             completion(.failure(NSError(domain: "NoToken", code: 401, userInfo: nil)))
             return
         }
-
+        
         let urlString = "https://api.unsplash.com/photos/\(photoId)/like"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "InvalidURL", code: 400, userInfo: nil)))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = isLike ? "POST" : "DELETE"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-
+        
         let task = URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
                 DispatchQueue.main.async {
@@ -153,7 +152,7 @@ final class ImagesListService {
                     )
                     self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
                 }
-
+                
                 completion(.success(()))
             }
         }

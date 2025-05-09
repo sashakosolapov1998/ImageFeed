@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - ProfileService
 final class ProfileService {
     static let shared = ProfileService()
     private var task: URLSessionTask?
@@ -15,6 +16,7 @@ final class ProfileService {
     
     private init() {}
     
+    // MARK: - Struct
     struct ProfileResults: Codable {
         let username: String
         let firstName: String?
@@ -36,6 +38,7 @@ final class ProfileService {
         let bio: String?
     }
     
+    // MARK: - Public Methods
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         if lastToken == token {
             return
