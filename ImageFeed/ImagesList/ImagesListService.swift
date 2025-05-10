@@ -20,6 +20,10 @@ final class ImagesListService {
     let token = OAuth2TokenStorage().token
     
     struct Photo {
+        fileprivate static let dateFormatter: ISO8601DateFormatter = {
+            ISO8601DateFormatter()
+        }()
+        
         let id: String
         let size: CGSize
         let createdAt: Date?
@@ -83,7 +87,7 @@ final class ImagesListService {
                         Photo(
                             id: result.id,
                             size: CGSize(width: CGFloat(result.width), height: CGFloat(result.height)),
-                            createdAt: ISO8601DateFormatter().date(from: result.createdAt),
+                            createdAt: Photo.dateFormatter.date(from: result.createdAt),
                             welcomeDescription: result.description,
                             thumbImageURL: result.urls.thumb,
                             smallImageURL: result.urls.small,
