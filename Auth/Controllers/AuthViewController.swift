@@ -70,13 +70,13 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("🧭 AuthVC: prepare(for:) вызван")
-        print("➡️ segue.identifier = \(segue.identifier ?? "nil")")
-        
         if segue.identifier == showWebViewSegueIdentifier,
            let webViewVC = segue.destination as? WebViewViewController {
+            let presenter = WebViewPresenter()
+            webViewVC.presenter = presenter
+            presenter.view = webViewVC
             webViewVC.delegate = self
-            print("✅ Делегат WebView установлен")
+            print("✅ Делегат WebView и презентер установлены")
         }
     }
 }
