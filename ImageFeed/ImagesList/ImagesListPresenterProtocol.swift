@@ -12,6 +12,7 @@ protocol ImagesListViewProtocol: AnyObject {
     func updateTableViewAnimated()
     func reloadRows(at indexPaths: [IndexPath])
     func insertRows(at indexPaths: [IndexPath])
+    func presentAlert(title: String, message: String)
 }
 
 protocol ImagesListPresenterProtocol {

@@ -5,8 +5,6 @@
 //  Created by Александр Косолапов on 12/5/25.
 //
 
-
-
 import UIKit
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
@@ -53,15 +51,25 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
 
     func didTapLikeButton(at indexPath: IndexPath) {
         let photo = ImagesListService.shared.photos[indexPath.row]
+
+        UIBlockingProgressHUD.show()
+
         ImagesListService.shared.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
             guard let self = self else { return }
+            UIBlockingProgressHUD.dismiss()
+
             switch result {
             case .success:
                 DispatchQueue.main.async {
                     self.view?.reloadRows(at: [indexPath])
                 }
-            case .failure(let error):
-                print("Ошибка при изменении лайка: \(error)")
+            case .failure:
+                DispatchQueue.main.async {
+                    self.view?.presentAlert(
+                        title: "Ошибка",
+                        message: "Не удалось поставить лайк. Попробуйте ещё раз."
+                    )
+                }
             }
         }
     }
