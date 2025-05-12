@@ -7,14 +7,6 @@
 import Foundation
 import WebKit
 
-// MARK: - WebViewPresenterProtocol
-public protocol WebViewPresenterProtocol {
-    var view: WebViewViewControllerProtocol? { get set }
-    func viewDidLoad()
-    func didUpdateProgressValue(_ newValue: Double)
-    func code(from url: URL) -> String?
-}
-
 // MARK: - WebViewPresenter
 final class WebViewPresenter: WebViewPresenterProtocol {
     private let configuration = AuthConfiguration.standard
