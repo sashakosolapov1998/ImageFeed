@@ -12,7 +12,9 @@ protocol ProfileViewProtocol: AnyObject {
     func updateAvatar(with url: URL)
 }
 
-protocol ProfilePresenterProtocol {
+protocol ProfilePresenterProtocol: AnyObject {
     func viewDidLoad()
     func didTapLogout()
+    var view : ProfileViewProtocol? { get set }
+
 }

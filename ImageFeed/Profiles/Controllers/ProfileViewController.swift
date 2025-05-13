@@ -15,10 +15,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private let nameLabel = UILabel()
     private let usernameLabel = UILabel()
     private let statusLabel = UILabel()
+    var exitButton = UIButton()
     
     private var presenter: ProfilePresenterProtocol?
     func configure(presenter: ProfilePresenterProtocol) {
         self.presenter = presenter
+        presenter.view = self
     }
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -39,18 +41,22 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
       }
     
     // MARK: - Private Methods
-    @objc private func didTapExitButton() {
+    @objc func didTapExitButton() {
+        present(makeLogoutAlert(), animated: true)
+    }
+    func makeLogoutAlert() -> UIAlertController {
         let alert = UIAlertController(
             title: "Пока, пока!",
             message: "Уверены, что хотите выйти?",
             preferredStyle: .alert
         )
-        
+
         alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             self?.presenter?.didTapLogout()
         })
         alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+        
+        return alert
     }
     
     // MARK: - SetupViewController
@@ -69,7 +75,6 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
           statusLabel.textColor = .white
           statusLabel.font = UIFont.systemFont(ofSize: 13)
           
-          let exitButton = UIButton()
           exitButton.setImage(UIImage(named: "ipad.and.arrow.forward "), for: .normal)
           exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
           
