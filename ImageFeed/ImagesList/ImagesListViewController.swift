@@ -9,6 +9,10 @@ import UIKit
 
 // MARK: - ImagesListViewController
 final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
+    func configureWithPresenter(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
     func reloadRows(at indexPaths: [IndexPath]) {
         tableView.reloadRows(at: indexPaths, with: .automatic)
     }
@@ -32,7 +36,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     
     
     // MARK: - Outlets
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     
     // MARK: - Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
