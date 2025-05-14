@@ -63,10 +63,10 @@ final class SingleImageViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case.success(let value):
-                self.image = value.image
-                self.imageView.image = value.image
-                self.imageView.frame.size = value.image.size
-                self.rescaleAndCenterImageInScrollView(image: value.image)
+                image = value.image
+                imageView.image = value.image
+                imageView.frame.size = value.image.size
+                rescaleAndCenterImageInScrollView(image: value.image)
             case.failure:
                 self.showError()
             }
@@ -131,7 +131,7 @@ final class SingleImageViewController: UIViewController {
 // MARK: - Extension
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
+        imageView
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {

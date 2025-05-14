@@ -46,6 +46,7 @@ final class WebViewViewController: UIViewController, WKNavigationDelegate, WebVi
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
+        webView.accessibilityIdentifier = "authWebView"
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
              options: [],

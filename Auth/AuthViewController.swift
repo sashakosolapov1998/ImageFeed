@@ -35,6 +35,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "chevron.backward")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "chevron.backward")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.accessibilityIdentifier = "navBackButton"
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
     }
     

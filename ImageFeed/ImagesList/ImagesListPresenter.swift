@@ -18,6 +18,13 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
 
     private var currentPhotoCount = 0
 
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
+
     func viewDidLoad() {
         notificationToken = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
@@ -82,14 +89,10 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
 
     func formattedDate(for photo: ImagesListService.Photo) -> String {
         guard let date = photo.createdAt else { return "" }
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter.string(from: date)
+        return Self.dateFormatter.string(from: date)
     }
 
     var photosCount: Int {
-        return ImagesListService.shared.photos.count
+        ImagesListService.shared.photos.count
     }
 }

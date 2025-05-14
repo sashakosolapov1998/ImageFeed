@@ -16,7 +16,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     func reloadRows(at indexPaths: [IndexPath]) {
         tableView.reloadRows(at: indexPaths, with: .automatic)
     }
-
+    
     func insertRows(at indexPaths: [IndexPath]) {
         print("insertRows вызван для: \(indexPaths)") // уберем
         tableView.performBatchUpdates {
@@ -42,9 +42,9 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     // private var photos: [ImagesListService.Photo] = []
     // private let imageListService = ImagesListService.shared
-
+    
     private var presenter: ImagesListPresenterProtocol?
-
+    
     func configure(presenter: ImagesListPresenterProtocol) {
         self.presenter = presenter
     }
@@ -58,20 +58,20 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
         
         print("Presenter photosCount on load: \(presenter?.photosCount ?? -1)") // уберем
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-    
+        
         presenter?.viewDidLoad()
     }
     
     // MARK: - Private Methods
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let photo = presenter?.photo(at: indexPath) else { return }
-
+        
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
             with: URL(string: photo.regularImageURL),
             placeholder: UIImage(named: "Stub")
         )
-
+        
         cell.dateLabel.text = presenter?.formattedDate(for: photo)
         cell.likeButton.isSelected = photo.isLiked
     }
@@ -79,7 +79,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     func updateTableViewAnimated() {
         let oldCount = tableView.numberOfRows(inSection: 0)
         let newCount = presenter?.photosCount ?? 0
-
+        
         if oldCount != newCount {
             tableView.performBatchUpdates({
                 let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
@@ -97,7 +97,6 @@ extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
-        print("cellForRowAt вызван для \(indexPath.row)") // убрать
         
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
