@@ -1,5 +1,5 @@
 //
-//  WebViewViewController.swift.swift
+//  WebViewViewController.swift
 //  ImageFeed
 //
 //  Created by Александр Косолапов on 09.04.2025.
@@ -12,7 +12,7 @@ import UIKit
 enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
-
+// MARK: - WebViewViewController
 final class WebViewViewController: UIViewController, WKNavigationDelegate {
     
     // MARK: - Outlets
@@ -26,21 +26,21 @@ final class WebViewViewController: UIViewController, WKNavigationDelegate {
     
     // MARK: - Public Properties
     weak var delegate: WebViewViewControllerDelegate?
-
+    
     // MARK: - Private Properties
     private var estimatedProgressObservation: NSKeyValueObservation?
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
-            options: [],
-            changeHandler: { [weak self] _, _ in
-                guard let self = self else { return }
-                self.updateProgress()
-            })
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             })
         loadAuthView()
     }
     

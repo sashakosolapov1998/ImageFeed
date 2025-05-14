@@ -11,6 +11,7 @@ import ProgressHUD
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
+// MARK: - AuthViewController
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let showWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?

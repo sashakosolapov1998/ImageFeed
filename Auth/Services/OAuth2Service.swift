@@ -7,10 +7,12 @@
 
 import Foundation
 
+// MARK: - OAuth2Service
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    // MARK: - Properties
     private var task: URLSessionTask?
     private var lastCode: String?
     
@@ -21,7 +23,7 @@ final class OAuth2Service {
             case accessToken = "access_token"
         }
     }
-    
+    // MARK: - Private Methods
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         var components = URLComponents()
         components.scheme = "https"
@@ -52,6 +54,7 @@ final class OAuth2Service {
         return request
     }
     
+    // MARK: - Public Methods
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
@@ -79,7 +82,7 @@ final class OAuth2Service {
                     self?.lastCode = nil
                     UIBlockingProgressHUD.dismiss()
                 }
-
+                
                 switch result {
                 case .success(let decoded):
                     let token = decoded.accessToken

@@ -14,7 +14,7 @@
         <scene sceneID="dGB-4v-Z3i">
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="kra-au-LuN" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Rdu-4p-cRO">
+                    <view key="view" contentMode="scaleAspectFit" id="Rdu-4p-cRO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -204,7 +204,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEl-LX-pUd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-984" y="16"/>
+            <point key="canvasLocation" x="-984" y="-40"/>
         </scene>
         <!--Images List View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -248,6 +248,9 @@
                                                         <constraint firstAttribute="width" constant="44" id="oJl-x9-nmx"/>
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="AQn-fi-Kji" eventType="touchUpInside" id="LAa-Zj-qsw"/>
+                                                    </connections>
                                                 </button>
 
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13 марта 2025" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2BV-bG-fnp" userLabel="Date Label">

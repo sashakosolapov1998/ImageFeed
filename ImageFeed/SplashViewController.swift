@@ -7,12 +7,16 @@
 import UIKit
 import Foundation
 
+// MARK: - SplashViewController
 final class SplashViewController: UIViewController, AuthViewControllerDelegate {
+    
+    // MARK: - Properties
     private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     
     let logoImageView = UIImageView()
-   
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,6 +31,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         ])
     }
     
+    // MARK: - Methods
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -34,7 +39,10 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
             fetchProfile(token)
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as! AuthViewController
+            guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+                assertionFailure("Не удалось привести AuthViewController")
+                return
+            }
             authViewController.delegate = self
             authViewController.modalPresentationStyle = .fullScreen
             present(authViewController, animated: true)
