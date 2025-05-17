@@ -35,6 +35,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "chevron.backward")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "chevron.backward")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.accessibilityIdentifier = "navBackButton"
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
     }
     
@@ -70,13 +71,20 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("🧭 AuthVC: prepare(for:) вызван")
-        print("➡️ segue.identifier = \(segue.identifier ?? "nil")")
-        
-        if segue.identifier == showWebViewSegueIdentifier,
-           let webViewVC = segue.destination as? WebViewViewController {
-            webViewVC.delegate = self
-            print("✅ Делегат WebView установлен")
+        if segue.identifier == showWebViewSegueIdentifier {
+            guard
+                let webViewViewController = segue.destination as? WebViewViewController
+            else {
+                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                return
+            }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
+            webViewViewController.delegate = self
+        } else {
+            super.prepare(for: segue, sender: sender)
         }
     }
 }

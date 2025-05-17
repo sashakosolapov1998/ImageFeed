@@ -43,6 +43,7 @@ final class ImagesListCell: UITableViewCell {
     
     func setIsLiked(_ isLiked: Bool) {
         likeButton.isSelected = isLiked
+        likeButton.accessibilityIdentifier = isLiked ? "like_button_on" : "like_button_off"
     }
     
     @IBAction private func likeButtonClicked() {

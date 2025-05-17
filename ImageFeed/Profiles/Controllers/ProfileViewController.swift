@@ -8,63 +8,75 @@ import UIKit
 import Foundation
 import Kingfisher
 // MARK: - ProfileViewController
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, ProfileViewProtocol {
     
     // MARK: - Properties
     private let avatar = UIImageView()
     private let nameLabel = UILabel()
     private let usernameLabel = UILabel()
     private let statusLabel = UILabel()
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var exitButton = UIButton()
     
+    private var presenter: ProfilePresenterProtocol?
+    func configure(presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        presenter.view = self
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        
+        presenter?.viewDidLoad()
         view.backgroundColor = .primaryBackground
-        
-        guard let profile = ProfileService.shared.profile else {
-            print("❌ Профиль не найден")
-            return
-        }
-        
-        updateProfileDetails(profile: profile)
-        updateAvatar()
+        setupProfileView()
     }
     
-    // MARK: - Public Methods
-    func updateProfileDetails(profile: ProfileService.Profile) {
+    // MARK: - ProfileViewProtocol
+    func updateAvatar(with url: URL) {
+        avatar.kf.setImage(with: url)
+    }
+    func showProfile(name: String, loginName: String, bio: String) {
+        nameLabel.text = name
+        usernameLabel.text = loginName
+        statusLabel.text = bio
+    }
+    
+    // MARK: - Private Methods
+    @objc func didTapExitButton() {
+        present(makeLogoutAlert(), animated: true)
+    }
+    func makeLogoutAlert() -> UIAlertController {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            self?.presenter?.didTapLogout()
+        })
+        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
+        
+        return alert
+    }
+    
+    // MARK: - SetupViewController
+    private func setupProfileView() {
         view.backgroundColor = .primaryBackground
         
-        
-        avatar.image = UIImage(named: "AvatarSample")
         avatar.layer.cornerRadius = 35
         avatar.clipsToBounds = true
         
-        nameLabel.text = profile.name
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         
-        usernameLabel.text = profile.loginName
         usernameLabel.textColor = .gray
         usernameLabel.font = UIFont.systemFont(ofSize: 13)
         
-        statusLabel.text = profile.bio
         statusLabel.textColor = .white
         statusLabel.font = UIFont.systemFont(ofSize: 13)
         
-        let exitButton = UIButton()
-        exitButton.setImage(UIImage(named: "ipad.and.arrow.forward "), for: .normal)
+        exitButton.setImage(UIImage(named: "ipad.and.arrow.forward"), for: .normal)
+        exitButton.accessibilityIdentifier = "exit_button"
         exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
         
         [avatar, nameLabel, usernameLabel, statusLabel, exitButton].forEach {
@@ -94,33 +106,4 @@ final class ProfileViewController: UIViewController {
             exitButton.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
-    
-    // MARK: - Private Methods
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        avatar.kf.setImage(with: url)
-    }
-    
-    @objc private func didTapExitButton() {
-        let alert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
-        })
-        
-        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
-        
-        
-        
-        present(alert, animated: true, completion: nil)
-    }
 }
-
-

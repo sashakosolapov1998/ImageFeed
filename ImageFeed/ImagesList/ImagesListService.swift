@@ -64,6 +64,7 @@ final class ImagesListService {
     
     // MARK: - Methods
     func fetchPhotosNextPage() {
+        print("ImagesListService: fetchPhotosNextPage вызван")
         if task != nil { return }
         let nextPage = (lastLoadedPage ?? 0) + 1
         
@@ -80,8 +81,10 @@ final class ImagesListService {
         self.task = URLSession.shared.dataTask(with: request) { data, response, error in
             defer { self.task = nil }
             if let data = data {
+                print("ImagesListService: получены данные от сервера, длина: \(data.count)")
                 do {
                     let photoResults = try JSONDecoder().decode([PhotoResult].self, from: data)
+                    print("ImagesListService: декодировано \(photoResults.count) фото")
                     
                     let newPhotos = photoResults.map { result in
                         Photo(
@@ -99,7 +102,9 @@ final class ImagesListService {
                     
                     DispatchQueue.main.async {
                         self.photos.append(contentsOf: newPhotos)
+                        print("ImagesListService: добавлено \(newPhotos.count) фото, всего: \(self.photos.count)")
                         self.lastLoadedPage = nextPage
+                        print("ImagesListService: отправлено уведомление didChangeNotification")
                         NotificationCenter.default.post(
                             name: ImagesListService.didChangeNotification,
                             object: self
